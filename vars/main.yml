@@ -1,0 +1,3 @@
+---
+# vars file for lighthouse-role
+light_home: "/opt/lighthouse-master"

@@ -1,0 +1,41 @@
+---
+# tasks file for lighthouse-role
+- name: Create repo for nginx
+  ansible.builtin.copy:
+    src: ./nginx.repo
+    dest: /etc/yum.repos.d/
+    mode: 0644
+
+- name: Install nginx & unzip
+  ansible.builtin.yum:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - "nginx"
+      - "unzip"
+
+- name: Download lighthouse archive
+  ansible.builtin.get_url:
+    url: "https://github.com/VKCOM/lighthouse/archive/refs/heads/master.zip"
+    dest: "/tmp/lighthouse.zip"
+
+- name: Unpack archive
+  ansible.builtin.unarchive:
+    src: "/tmp/lighthouse.zip"
+    dest: "/opt/"
+    remote_src: yes
+
+- name: Create nginx config (default)
+  ansible.builtin.template:
+    src: "nginx_light.conf.j2"
+    dest: "/etc/nginx/conf.d/default.conf"
+    force: yes
+
+- name: Check nginx is running
+  ansible.builtin.shell: "ps axuf | grep 'nginx: master' | grep -v 'grep' | cat"
+  register: nginx_status
+
+- name: Start nginx
+  ansible.builtin.command: "nginx"
+  when: nginx_status.stdout == ""
