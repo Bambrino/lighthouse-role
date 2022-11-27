@@ -1,0 +1,8 @@
+---
+- name: Check nginx is running
+  ansible.builtin.shell: "ps axuf | grep 'nginx: master' | grep -v 'grep' | cat"
+  register: nginx_status
+
+- name: Start nginx
+  ansible.builtin.command: "nginx"
+  when: nginx_status.stdout == ""

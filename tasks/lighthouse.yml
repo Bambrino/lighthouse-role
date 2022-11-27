@@ -1,0 +1,11 @@
+---
+- name: Download lighthouse archive
+  ansible.builtin.get_url:
+    url: "https://github.com/VKCOM/lighthouse/archive/refs/heads/master.zip"
+    dest: "/tmp/lighthouse.zip"
+
+- name: Unpack archive
+  ansible.builtin.unarchive:
+    src: "/tmp/lighthouse.zip"
+    dest: "/opt/"
+    remote_src: yes

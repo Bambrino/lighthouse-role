@@ -1,5 +1,5 @@
 server {
-    listen       80;
+    listen       {{ nginx_port }};
     server_name  {{ ansible_host }};
 
     access_log  /var/log/nginx/access.log  main;
